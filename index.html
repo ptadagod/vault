@@ -501,8 +501,8 @@ function renderChips() {
   c.innerHTML = `<div class="chip${selGoalId===''?' selected':''}" data-id="" onclick="selectChip(this)">No Goal</div>`;
   goals.forEach(g => {
     const d = document.createElement('div');
-    d.className='chip'+(selGoalId==g.id?' selected':'');
-    d.dataset.id=g.id; d.textContent=g.name;
+    d.className='chip'+(String(selGoalId)===String(g.id)?' selected':'');
+    d.dataset.id=String(g.id); d.textContent=g.name;
     d.onclick=()=>selectChip(d);
     c.appendChild(d);
   });
@@ -521,7 +521,7 @@ window.addDeposit = function() {
   const note=document.getElementById('depNote').value.trim();
   if(!date){err.textContent='Please select a date.';err.classList.add('show');return;}
   if(!amt||amt<=0){err.textContent='Please enter a valid amount.';err.classList.add('show');return;}
-  deposits.push({id:Date.now(),date,day,amount:amt,note,goalId:selGoalId});
+  deposits.push({id:String(Date.now()),date,day,amount:amt,note,goalId:String(selGoalId)});
   deposits.sort((a,b)=>a.date.localeCompare(b.date));
   document.getElementById('depAmt').value='';
   document.getElementById('depNote').value='';
@@ -529,7 +529,7 @@ window.addDeposit = function() {
 };
 
 window.removeDeposit = function(id) {
-  deposits=deposits.filter(d=>d.id!==id);
+  deposits=deposits.filter(d=>String(d.id)!==String(id));
   saveData(); renderDeposits(); renderGoals(); recalcPool();
 };
 
@@ -542,19 +542,19 @@ window.clearDeposits = function() {
 function renderDeposits() {
   const rows=document.getElementById('depositRows');
   if(!deposits.length){rows.innerHTML='<div class="empty-state">No deposits planned yet</div>';return;}
-  const gMap={}; goals.forEach(g=>gMap[g.id]=g.name);
+  const gMap={}; goals.forEach(g=>gMap[String(g.id)]=g.name);
   const today=new Date(); today.setHours(0,0,0,0);
   rows.innerHTML=deposits.map(d=>{
     const depDate=new Date(d.date+'T12:00:00');
     const isPast=depDate<today;
     const fmtD=depDate.toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'});
-    const goalTag=d.goalId&&gMap[d.goalId]?`<span class="dep-goal-tag">${gMap[d.goalId]}</span>`:'';
+    const goalTag=d.goalId&&gMap[String(d.goalId)]?`<span class="dep-goal-tag">${gMap[String(d.goalId)]}</span>`:'';
     return `<div class="dep-row" style="${isPast?'opacity:0.5':''}">
       <div class="dep-cell"><div class="dep-day">${d.day.slice(0,3).toUpperCase()}</div></div>
       <div class="dep-cell"><div class="dep-date-txt">${fmtD}</div></div>
       <div class="dep-cell"><span class="dep-note">${d.note||'—'}</span>&nbsp;${goalTag}</div>
       <div class="dep-cell"><span class="dep-amount">+$${fmt(d.amount)}</span></div>
-      <div class="dep-cell"><button class="dep-remove" onclick="removeDeposit(${d.id})">✕</button></div>
+      <div class="dep-cell"><button class="dep-remove" onclick="removeDeposit('${d.id}')">✕</button></div>
     </div>`;
   }).join('');
 }
@@ -566,7 +566,7 @@ window.addGoal = function() {
   const amt=parseFloat(document.getElementById('goalAmt').value);
   if(!name){err.textContent='Please enter a goal name.';err.classList.add('show');return;}
   if(!amt||amt<=0){err.textContent='Please enter a target amount.';err.classList.add('show');return;}
-  goals.push({id:Date.now(),name,target:amt});
+  goals.push({id:String(Date.now()),name,target:amt});
   document.getElementById('goalName').value='';
   document.getElementById('goalAmt').value='';
   saveData(); renderGoals(); renderChips(); recalcPool();
@@ -574,9 +574,9 @@ window.addGoal = function() {
 
 window.removeGoal = function(id) {
   if(!confirm('Remove this goal?'))return;
-  goals=goals.filter(g=>g.id!==id);
-  deposits.forEach(d=>{if(d.goalId==id)d.goalId='';});
-  if(selGoalId==id)selGoalId='';
+  goals=goals.filter(g=>String(g.id)!==String(id));
+  deposits.forEach(d=>{if(String(d.goalId)===String(id))d.goalId='';});
+  if(String(selGoalId)===String(id))selGoalId='';
   saveData(); renderGoals(); renderChips(); renderDeposits(); recalcPool();
 };
 
@@ -584,12 +584,12 @@ function renderGoals() {
   const container=document.getElementById('goalCards');
   if(!goals.length){container.innerHTML='<div class="empty-state">No goals yet — add one above</div>';return;}
   container.innerHTML=goals.map(g=>{
-    const saved=deposits.filter(d=>d.goalId==g.id).reduce((s,d)=>s+d.amount,0);
+    const saved=deposits.filter(d=>String(d.goalId)===String(g.id)).reduce((s,d)=>s+d.amount,0);
     const remaining=Math.max(0,g.target-saved);
     const pct=Math.min(100,(saved/g.target)*100);
     const done=remaining<=0;
     let weeksStr='—';
-    const gDeps=deposits.filter(d=>d.goalId==g.id).sort((a,b)=>a.date.localeCompare(b.date));
+    const gDeps=deposits.filter(d=>String(d.goalId)===String(g.id)).sort((a,b)=>a.date.localeCompare(b.date));
     if(!done&&gDeps.length>=2){
       const d1=new Date(gDeps[0].date+'T12:00:00'),d2=new Date(gDeps[gDeps.length-1].date+'T12:00:00');
       const wkSpan=Math.max((d2-d1)/(7*24*60*60*1000),.14);
@@ -599,7 +599,7 @@ function renderGoals() {
     return `<div class="goal-card${done?' complete':''}" id="gc-${g.id}">
       <div class="goal-header">
         <div><div class="goal-name">${g.name}</div><div class="goal-target-txt">TARGET · $${fmt(g.target)}</div></div>
-        <button class="btn-ghost" onclick="removeGoal(${g.id})" style="font-size:10px;padding:6px 10px;">REMOVE</button>
+        <button class="btn-ghost" onclick="removeGoal('${g.id}')" style="font-size:10px;padding:6px 10px;">REMOVE</button>
       </div>
       <div class="goal-nums">
         <div class="gn-block"><span class="gn-val green">$${fmt(saved)}</span><span class="gn-key">Planned</span></div>
@@ -614,7 +614,7 @@ function renderGoals() {
   }).join('');
   setTimeout(()=>{
     goals.forEach(g=>{
-      const saved=deposits.filter(d=>d.goalId==g.id).reduce((s,d)=>s+d.amount,0);
+      const saved=deposits.filter(d=>String(d.goalId)===String(g.id)).reduce((s,d)=>s+d.amount,0);
       const pct=Math.min(100,(saved/g.target)*100);
       const el=document.getElementById('gpf-'+g.id);
       if(el)el.style.width=pct+'%';
