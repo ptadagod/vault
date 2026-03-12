@@ -334,6 +334,11 @@ const auth  = getAuth(fbApp);
 const db    = getFirestore(fbApp);
 
 // ── LOADER ──
+const LOADER_DURATION = 6500; // ms — hard minimum load time
+const loaderStart = Date.now();
+let loaderDone = false;
+let pendingReveal = null;
+
 (function() {
   const rain = document.getElementById('dollarRain');
   const fill = document.getElementById('loaderFill');
@@ -345,14 +350,34 @@ const db    = getFirestore(fbApp);
     el.style.cssText = `left:${Math.random()*100}vw;animation-duration:${2+Math.random()*4}s;animation-delay:${Math.random()*3}s;font-size:${12+Math.random()*22}px;`;
     rain.appendChild(el);
   }
-  let p = 0;
-  const iv = setInterval(() => {
-    p += Math.random() * 14;
-    if (p > 100) p = 100;
-    fill.style.width = p + '%';
-    if (p >= 100) { clearInterval(iv); }
-  }, 110);
+  // Animate bar over exactly LOADER_DURATION ms
+  const t0 = performance.now();
+  function step(now) {
+    const elapsed = now - t0;
+    const pct = Math.min(100, (elapsed / LOADER_DURATION) * 100);
+    // Add slight randomness so it doesn't look mechanical
+    fill.style.width = Math.min(100, pct + Math.sin(elapsed/400)*2) + '%';
+    if (elapsed < LOADER_DURATION) {
+      requestAnimationFrame(step);
+    } else {
+      fill.style.width = '100%';
+      loaderDone = true;
+      setTimeout(() => {
+        document.getElementById('loader').classList.add('hidden');
+        if (pendingReveal) { pendingReveal(); pendingReveal = null; }
+      }, 300);
+    }
+  }
+  requestAnimationFrame(step);
 })();
+
+function revealWhenReady(fn) {
+  if (loaderDone) {
+    fn();
+  } else {
+    pendingReveal = fn;
+  }
+}
 
 // ── CLOCK ──
 function tickClock() {
@@ -367,21 +392,24 @@ let deposits = [], goals = [], selGoalId = '', currentUid = null, unsubSnapshot 
 
 // ── AUTH STATE ──
 onAuthStateChanged(auth, user => {
-  document.getElementById('loader').classList.add('hidden');
   if (user) {
     currentUid = user.uid;
     document.getElementById('userEmail').textContent = user.email;
-    document.getElementById('authScreen').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    setTimeout(() => document.getElementById('app').classList.add('visible'), 50);
-    listenData();
+    revealWhenReady(() => {
+      document.getElementById('authScreen').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      setTimeout(() => document.getElementById('app').classList.add('visible'), 50);
+      listenData();
+    });
   } else {
     currentUid = null;
     if (unsubSnapshot) { unsubSnapshot(); unsubSnapshot = null; }
-    document.getElementById('app').classList.remove('visible');
-    document.getElementById('app').style.display = 'none';
-    document.getElementById('authScreen').style.display = 'flex';
-    setTimeout(() => document.getElementById('authScreen').classList.add('visible'), 50);
+    revealWhenReady(() => {
+      document.getElementById('app').classList.remove('visible');
+      document.getElementById('app').style.display = 'none';
+      document.getElementById('authScreen').style.display = 'flex';
+      setTimeout(() => document.getElementById('authScreen').classList.add('visible'), 50);
+    });
   }
 });
 
