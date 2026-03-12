@@ -2,16 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Vault — Savings Planner</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg:#0a0a0a;--surface:#111111;--surface2:#161616;--surface3:#1c1c1c;
-    --border:#252525;--border2:#2e2e2e;--gold:#c9a84c;--gold-light:#f0c97a;
-    --gold-dark:#8a6820;--green:#2dde98;--red:#ff4d6d;--text:#f0ebe0;--muted:#555;--muted2:#333;
-  }
-  *{margin:0;padding:0;box-sizing:border-box;}
+  :root{--bg:#0a0a0a;--surface:#111111;--surface2:#161616;--surface3:#1c1c1c;--border:#252525;--border2:#2e2e2e;--gold:#c9a84c;--gold-light:#f0c97a;--gold-dark:#8a6820;--green:#2dde98;--red:#ff4d6d;--text:#f0ebe0;--muted:#555;--muted2:#333;}
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
 
   /* LOADER */
@@ -20,163 +16,178 @@
   .dollar-rain{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
   .dollar-char{position:absolute;font-family:'Space Mono',monospace;color:var(--gold);opacity:0;animation:fall linear infinite;top:-40px;user-select:none;}
   @keyframes fall{0%{transform:translateY(0) rotate(0deg);opacity:0;}8%{opacity:.7;}88%{opacity:.2;}100%{transform:translateY(110vh) rotate(540deg);opacity:0;}}
-  .loader-logo{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,12vw,100px);color:var(--gold);letter-spacing:10px;animation:glow 1.6s ease-in-out infinite;position:relative;z-index:1;}
+  .loader-logo{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,16vw,100px);color:var(--gold);letter-spacing:10px;animation:glow 1.6s ease-in-out infinite;position:relative;z-index:1;}
   @keyframes glow{0%,100%{text-shadow:0 0 30px rgba(201,168,76,.25);}50%{text-shadow:0 0 70px rgba(201,168,76,.65),0 0 120px rgba(201,168,76,.2);}}
   .loader-sub{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--muted);text-transform:uppercase;z-index:1;}
   .loader-track{width:200px;height:2px;background:#1e1e1e;border-radius:2px;overflow:hidden;z-index:1;}
-  .loader-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--gold-dark),var(--gold-light));transition:width .1s linear;}
+  .loader-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--gold-dark),var(--gold-light));}
 
-  /* AUTH SCREEN */
+  /* AUTH */
   #authScreen{position:fixed;inset:0;background:var(--bg);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity .5s ease;}
   #authScreen.visible{opacity:1;}
-  .auth-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:40px 36px;width:100%;max-width:420px;position:relative;overflow:hidden;}
+  .auth-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px 24px;width:100%;max-width:420px;position:relative;overflow:hidden;}
   .auth-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.5;}
   .auth-brand{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--gold);letter-spacing:5px;text-align:center;margin-bottom:6px;}
-  .auth-sub{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;text-align:center;margin-bottom:32px;}
-  .auth-tabs{display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:24px;}
-  .auth-tab{flex:1;padding:10px;text-align:center;cursor:pointer;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);transition:all .15s;}
+  .auth-sub{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;text-align:center;margin-bottom:28px;}
+  .auth-tabs{display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px;}
+  .auth-tab{flex:1;padding:12px;text-align:center;cursor:pointer;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);transition:all .15s;}
   .auth-tab.active{background:var(--surface3);color:var(--gold-light);}
-  .auth-field{display:flex;flex-direction:column;gap:7px;margin-bottom:16px;}
+  .auth-field{display:flex;flex-direction:column;gap:7px;margin-bottom:14px;}
   .auth-field label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
-  .auth-field input{background:var(--surface2);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-family:'Space Mono',monospace;font-size:14px;padding:12px 14px;outline:none;width:100%;transition:border-color .2s,box-shadow .2s;}
+  .auth-field input{background:var(--surface2);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-family:'Space Mono',monospace;font-size:16px;padding:14px;outline:none;width:100%;-webkit-appearance:none;transition:border-color .2s,box-shadow .2s;}
   .auth-field input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.1);}
-  .btn-auth{width:100%;padding:14px;background:linear-gradient(135deg,var(--gold-dark),var(--gold),var(--gold-light));border:none;border-radius:10px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:4px;color:#080808;cursor:pointer;transition:transform .15s,box-shadow .15s,filter .15s;margin-top:4px;}
-  .btn-auth:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(201,168,76,.3);filter:brightness(1.05);}
+  .btn-auth{width:100%;padding:16px;background:linear-gradient(135deg,var(--gold-dark),var(--gold),var(--gold-light));border:none;border-radius:10px;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:4px;color:#080808;cursor:pointer;margin-top:6px;}
+  .btn-auth:active{transform:scale(.98);}
   .auth-err{background:rgba(255,77,109,.08);border:1px solid rgba(255,77,109,.25);border-radius:8px;padding:10px 14px;font-family:'Space Mono',monospace;font-size:11px;color:var(--red);margin-top:12px;display:none;}
   .auth-err.show{display:block;}
   .auth-loading{text-align:center;font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:2px;margin-top:12px;display:none;}
   .auth-loading.show{display:block;}
 
   /* APP */
-  #app{max-width:860px;margin:0 auto;padding:36px 20px 100px;opacity:0;transform:translateY(18px);transition:opacity .6s ease .15s,transform .6s ease .15s;display:none;}
-  #app.visible{opacity:1;transform:translateY(0);display:block;}
+  #app{max-width:860px;margin:0 auto;padding:18px 14px 100px;opacity:0;transform:translateY(18px);transition:opacity .6s ease .15s,transform .6s ease .15s;display:none;}
+  #app.visible{opacity:1;transform:translateY(0);}
 
-  .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:36px;padding-bottom:20px;border-bottom:1px solid var(--border);}
-  .brand{font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--gold);letter-spacing:5px;}
+  /* HEADER */
+  .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border);gap:8px;}
+  .brand{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--gold);letter-spacing:4px;flex-shrink:0;}
   .brand em{color:var(--text);opacity:.2;font-style:normal;}
-  .header-right{display:flex;align-items:center;gap:16px;}
+  .header-right{display:flex;align-items:center;gap:10px;}
   .clock-wrap{text-align:right;font-family:'Space Mono',monospace;}
-  .clock-time{font-size:18px;color:var(--gold-light);display:block;}
-  .clock-date{font-size:11px;color:var(--muted);}
-  .user-info{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;text-align:right;}
-  .user-email{color:var(--gold-light);display:block;font-size:11px;margin-bottom:2px;}
-  .btn-signout{background:none;border:1px solid var(--border2);border-radius:6px;color:var(--muted);font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;cursor:pointer;transition:all .15s;}
-  .btn-signout:hover{border-color:var(--red);color:var(--red);}
+  .clock-time{font-size:14px;color:var(--gold-light);display:block;}
+  .clock-date{font-size:9px;color:var(--muted);}
+  .user-info{text-align:right;}
+  .user-email{color:var(--gold-light);display:block;font-family:'Space Mono',monospace;font-size:9px;margin-bottom:4px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .btn-signout{background:none;border:1px solid var(--border2);border-radius:6px;color:var(--muted);font-family:'Space Mono',monospace;font-size:8px;letter-spacing:1px;text-transform:uppercase;padding:5px 8px;cursor:pointer;}
 
-  .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 30px;margin-bottom:20px;position:relative;overflow:hidden;}
-  .card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.4;}
-  .card-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:8px;}
-  .card-label::after{content:'';flex:1;height:1px;background:var(--border);}
+  /* HERO */
+  .pool-hero{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px 18px;text-align:center;position:relative;overflow:hidden;margin-bottom:12px;}
+  .pool-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.6;}
+  .pool-hero::after{content:'';position:absolute;top:-50%;left:-60%;width:35%;height:200%;background:linear-gradient(100deg,transparent,rgba(201,168,76,.06),transparent);transform:skewX(-15deg);animation:shimmer 4s ease-in-out infinite 2s;}
+  @keyframes shimmer{0%{left:-60%}100%{left:130%}}
+  .pool-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:6px;position:relative;z-index:1;}
+  .pool-total{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,16vw,92px);color:var(--text);line-height:1;letter-spacing:2px;position:relative;z-index:1;}
+  .pool-total .cur{font-size:.42em;color:var(--gold);vertical-align:top;margin-top:10px;display:inline-block;}
+  .pool-sub{margin-top:5px;font-size:11px;color:var(--muted);font-family:'Space Mono',monospace;position:relative;z-index:1;}
+  .prog-wrap{margin:12px 0 5px;height:3px;background:var(--border);border-radius:2px;overflow:hidden;position:relative;z-index:1;}
+  .prog-fill{height:100%;width:0%;border-radius:2px;background:linear-gradient(90deg,var(--gold-dark),var(--gold-light));transition:width 1s cubic-bezier(.34,1.2,.64,1);}
+  .prog-pct{font-family:'Space Mono',monospace;font-size:10px;color:var(--gold);position:relative;z-index:1;}
 
-  input,select{background:var(--surface2);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-family:'Space Mono',monospace;font-size:14px;padding:11px 13px;outline:none;width:100%;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;appearance:none;}
-  input:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.1);}
-  input[type="date"]::-webkit-calendar-picker-indicator,input[type="time"]::-webkit-calendar-picker-indicator{filter:invert(.4) sepia(1) saturate(2);cursor:pointer;opacity:.5;}
-  select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23555' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;cursor:pointer;}
-  .field{display:flex;flex-direction:column;gap:7px;}
-  .field label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
-  .prefix-row{display:flex;}
-  .prefix-box{background:var(--gold);color:#000;font-family:'Bebas Neue',sans-serif;font-size:20px;padding:10px 13px;border-radius:10px 0 0 10px;line-height:1;flex-shrink:0;}
-  .prefix-row input{border-radius:0 10px 10px 0;border-left:none;}
+  /* STATS */
+  .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+  .stat-box{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;text-align:center;}
+  .stat-val{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--text);display:block;margin-bottom:3px;}
+  .stat-val.green{color:var(--green);}
+  .stat-val.gold{color:var(--gold-light);}
+  .stat-key{font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-family:'Space Mono',monospace;}
 
-  .tabs{display:flex;gap:0;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
-  .tab{flex:1;padding:13px 16px;text-align:center;cursor:pointer;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);border-right:1px solid var(--border);transition:all .15s;}
+  /* SYNC */
+  .sync-status{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;text-align:center;padding:4px;margin-bottom:10px;transition:color .3s;}
+  .sync-status.syncing{color:var(--gold);}
+  .sync-status.saved{color:var(--green);}
+
+  /* TABS */
+  .tabs{display:flex;margin-bottom:12px;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+  .tab{flex:1;padding:14px 10px;text-align:center;cursor:pointer;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);border-right:1px solid var(--border);transition:all .15s;}
   .tab:last-child{border-right:none;}
   .tab.active{background:var(--surface3);color:var(--gold-light);}
   .tab-panel{display:none;}
   .tab-panel.active{display:block;}
 
-  .pool-hero{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:36px 32px;text-align:center;position:relative;overflow:hidden;margin-bottom:20px;}
-  .pool-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.6;}
-  .pool-hero::after{content:'';position:absolute;top:-50%;left:-60%;width:35%;height:200%;background:linear-gradient(100deg,transparent,rgba(201,168,76,.06),transparent);transform:skewX(-15deg);animation:shimmer 4s ease-in-out infinite 2s;}
-  @keyframes shimmer{0%{left:-60%}100%{left:130%}}
-  .pool-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:10px;position:relative;z-index:1;}
-  .pool-total{font-family:'Bebas Neue',sans-serif;font-size:clamp(56px,14vw,92px);color:var(--text);line-height:1;letter-spacing:2px;position:relative;z-index:1;}
-  .pool-total .cur{font-size:.42em;color:var(--gold);vertical-align:top;margin-top:12px;display:inline-block;}
-  .pool-sub{margin-top:8px;font-size:12px;color:var(--muted);font-family:'Space Mono',monospace;position:relative;z-index:1;}
-  .prog-wrap{margin:20px 0 6px;height:3px;background:var(--border);border-radius:2px;overflow:hidden;position:relative;z-index:1;}
-  .prog-fill{height:100%;width:0%;border-radius:2px;background:linear-gradient(90deg,var(--gold-dark),var(--gold-light));transition:width 1s cubic-bezier(.34,1.2,.64,1);}
-  .prog-pct{font-family:'Space Mono',monospace;font-size:11px;color:var(--gold);position:relative;z-index:1;}
+  /* CARD */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:12px;position:relative;overflow:hidden;}
+  .card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.4;}
+  .card-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+  .card-label::after{content:'';flex:1;height:1px;background:var(--border);}
 
-  .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;}
-  @media(max-width:500px){.stats-row{grid-template-columns:1fr 1fr;}}
-  .stat-box{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px 14px;text-align:center;}
-  .stat-val{font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--text);display:block;margin-bottom:4px;}
-  .stat-val.green{color:var(--green);}
-  .stat-val.gold{color:var(--gold-light);}
-  .stat-key{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-family:'Space Mono',monospace;}
+  /* INPUTS — font-size 16px prevents iOS zoom */
+  input,select{background:var(--surface2);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-family:'Space Mono',monospace;font-size:16px;padding:13px;outline:none;width:100%;-webkit-appearance:none;appearance:none;transition:border-color .2s,box-shadow .2s;}
+  input:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.1);}
+  input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(.4) sepia(1) saturate(2);cursor:pointer;opacity:.5;}
+  select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23555' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+  .prefix-row{display:flex;}
+  .prefix-box{background:var(--gold);color:#000;font-family:'Bebas Neue',sans-serif;font-size:20px;padding:12px 13px;border-radius:10px 0 0 10px;line-height:1;flex-shrink:0;}
+  .prefix-row input{border-radius:0 10px 10px 0;border-left:none;}
 
-  .form-grid{display:grid;grid-template-columns:150px 150px 1fr;gap:12px;align-items:end;}
-  @media(max-width:580px){.form-grid{grid-template-columns:1fr 1fr;}}
+  /* FORM LAYOUT */
+  .form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+  .form-full{margin-bottom:10px;}
 
-  .btn-gold-full{width:100%;margin-top:18px;padding:16px;background:linear-gradient(135deg,var(--gold-dark),var(--gold),var(--gold-light));border:none;border-radius:12px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:4px;color:#080808;cursor:pointer;transition:transform .15s,box-shadow .15s,filter .15s;position:relative;overflow:hidden;}
-  .btn-gold-full:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(201,168,76,.3);filter:brightness(1.06);}
-  .btn-gold-full:active{transform:translateY(0);}
-  .btn-gold-full::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,.1));}
-  .btn-gold{background:linear-gradient(135deg,var(--gold-dark),var(--gold),var(--gold-light));border:none;border-radius:10px;color:#0a0a0a;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;padding:12px 22px;cursor:pointer;white-space:nowrap;transition:transform .15s,box-shadow .15s,filter .15s;position:relative;overflow:hidden;}
-  .btn-gold:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(201,168,76,.3);filter:brightness(1.05);}
-  .btn-ghost{background:transparent;border:1px solid var(--border2);border-radius:8px;color:var(--muted);font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:8px 14px;cursor:pointer;transition:border-color .15s,color .15s;}
-  .btn-ghost:hover{border-color:var(--red);color:var(--red);}
-
-  .err{background:rgba(255,77,109,.08);border:1px solid rgba(255,77,109,.25);border-radius:10px;padding:10px 14px;font-family:'Space Mono',monospace;font-size:11px;color:var(--red);margin-top:12px;display:none;}
-  .err.show{display:block;}
-
-  .deposit-table{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:20px;}
-  .dep-col-headers{display:grid;grid-template-columns:110px 120px 1fr 110px 80px;background:var(--surface2);border-bottom:1px solid var(--border);}
-  .dep-col-h{padding:10px 14px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);border-right:1px solid var(--border);}
-  .dep-col-h:last-child{border-right:none;text-align:right;}
-  .dep-row{display:grid;grid-template-columns:110px 120px 1fr 110px 80px;border-bottom:1px solid var(--border);transition:background .15s;animation:slideIn .25s ease both;}
-  .dep-row:last-child{border-bottom:none;}
-  .dep-row:hover{background:rgba(201,168,76,.02);}
-  @keyframes slideIn{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:translateX(0)}}
-  .dep-cell{padding:13px 14px;display:flex;align-items:center;border-right:1px solid var(--border);font-family:'Space Mono',monospace;font-size:12px;}
-  .dep-cell:last-child{border-right:none;justify-content:flex-end;}
-  .dep-day{font-weight:700;color:var(--text);}
-  .dep-date-txt{font-size:10px;color:var(--muted);}
-  .dep-note{color:var(--muted);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .dep-goal-tag{background:rgba(201,168,76,.12);color:var(--gold);border-radius:4px;font-size:10px;padding:2px 7px;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .dep-amount{font-weight:700;color:var(--green);font-size:13px;}
-  .dep-remove{background:none;border:1px solid var(--border);border-radius:5px;color:var(--muted2);font-size:10px;padding:3px 7px;cursor:pointer;margin-left:6px;transition:all .15s;}
-  .dep-remove:hover{border-color:var(--red);color:var(--red);}
-  .empty-state{text-align:center;padding:32px;color:var(--muted);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;border:1px solid var(--border);border-radius:12px;}
-
-  .chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
-  .chip{padding:6px 14px;border:1px solid var(--border2);border-radius:20px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);cursor:pointer;background:var(--surface2);transition:all .15s;}
-  .chip:hover{border-color:var(--gold);color:var(--gold-light);}
+  /* CHIPS */
+  .chip-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+  .chip-row{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{padding:9px 13px;border:1px solid var(--border2);border-radius:20px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);cursor:pointer;background:var(--surface2);transition:all .15s;min-height:38px;display:flex;align-items:center;}
   .chip.selected{background:var(--surface3);border-color:var(--gold);color:var(--gold-light);}
 
-  .goal-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px 28px;margin-bottom:16px;position:relative;overflow:hidden;animation:slideIn .3s ease both;}
+  /* BUTTONS */
+  .btn-gold-full{width:100%;margin-top:14px;padding:17px;background:linear-gradient(135deg,var(--gold-dark),var(--gold),var(--gold-light));border:none;border-radius:12px;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:4px;color:#080808;cursor:pointer;position:relative;overflow:hidden;min-height:58px;}
+  .btn-gold-full:active{transform:scale(.98);}
+  .btn-gold-full::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,.1));}
+  .btn-gold{background:linear-gradient(135deg,var(--gold-dark),var(--gold),var(--gold-light));border:none;border-radius:10px;color:#0a0a0a;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;padding:14px 20px;cursor:pointer;min-height:52px;width:100%;}
+  .btn-gold:active{transform:scale(.97);}
+  .btn-ghost{background:transparent;border:1px solid var(--border2);border-radius:8px;color:var(--muted);font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:12px 14px;cursor:pointer;min-height:46px;width:100%;}
+
+  .err{background:rgba(255,77,109,.08);border:1px solid rgba(255,77,109,.25);border-radius:10px;padding:10px 14px;font-family:'Space Mono',monospace;font-size:11px;color:var(--red);margin-top:10px;display:none;}
+  .err.show{display:block;}
+
+  /* DEPOSIT CARDS */
+  @keyframes slideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .deposit-list{display:flex;flex-direction:column;gap:10px;margin-bottom:12px;}
+  .dep-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:13px 14px;display:flex;align-items:center;gap:12px;animation:slideIn .25s ease both;}
+  .dep-card.past{opacity:.4;}
+  .dep-day-badge{display:flex;flex-direction:column;align-items:center;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:8px 10px;min-width:48px;flex-shrink:0;}
+  .dep-day-short{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--gold-light);line-height:1;}
+  .dep-day-date{font-family:'Space Mono',monospace;font-size:8px;color:var(--muted);margin-top:3px;text-align:center;line-height:1.4;}
+  .dep-info{flex:1;min-width:0;}
+  .dep-note-txt{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .dep-note-txt.empty{color:var(--muted);}
+  .dep-goal-tag{display:inline-block;background:rgba(201,168,76,.12);color:var(--gold);border-radius:4px;font-size:9px;font-family:'Space Mono',monospace;padding:3px 7px;margin-top:4px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .dep-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0;}
+  .dep-amount{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--green);}
+  .dep-remove{background:none;border:1px solid var(--border);border-radius:6px;color:var(--muted2);font-size:12px;padding:6px 10px;cursor:pointer;min-height:32px;min-width:32px;display:flex;align-items:center;justify-content:center;}
+  .empty-state{text-align:center;padding:28px 16px;color:var(--muted);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;border:1px solid var(--border);border-radius:12px;}
+
+  /* GOAL CARDS */
+  .goal-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:12px;position:relative;overflow:hidden;animation:slideIn .3s ease both;}
   .goal-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.4;}
   .goal-card.complete::before{background:linear-gradient(90deg,transparent,var(--green),transparent);opacity:.5;}
-  .goal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;}
-  .goal-name{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--gold-light);letter-spacing:2px;}
+  .goal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:10px;}
+  .goal-name{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--gold-light);letter-spacing:2px;line-height:1.1;}
   .goal-target-txt{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;margin-top:3px;}
-  .goal-nums{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;}
-  @media(max-width:480px){.goal-nums{grid-template-columns:1fr 1fr;}}
+  .goal-nums{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
   .gn-block{display:flex;flex-direction:column;gap:3px;}
-  .gn-val{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;}
+  .gn-val{font-family:'Space Mono',monospace;font-size:15px;font-weight:700;}
   .gn-val.green{color:var(--green);}
   .gn-val.gold{color:var(--gold-light);}
   .gn-val.muted{color:var(--muted);}
   .gn-val.white{color:var(--text);}
   .gn-key{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
-  .goal-prog-wrap{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:6px;}
+  .goal-prog-wrap{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:6px;}
   .goal-prog-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--gold-dark),var(--gold-light));transition:width 1s cubic-bezier(.34,1.2,.64,1);}
   .goal-prog-fill.done{background:linear-gradient(90deg,#1a8a60,var(--green));}
   .goal-prog-pct{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);}
   .goal-done-banner{background:rgba(45,222,152,.08);border:1px solid rgba(45,222,152,.2);border-radius:8px;padding:10px 14px;font-family:'Space Mono',monospace;font-size:11px;color:var(--green);text-align:center;letter-spacing:2px;margin-top:12px;}
-  .goal-form{display:grid;grid-template-columns:1fr 160px auto;gap:12px;align-items:end;}
-  @media(max-width:520px){.goal-form{grid-template-columns:1fr 1fr;}.goal-form .btn-gold{grid-column:1/-1;}}
+  .goal-remove-btn{background:none;border:1px solid var(--border2);border-radius:8px;color:var(--muted);font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:8px 12px;cursor:pointer;flex-shrink:0;}
 
-  .sync-status{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;text-align:center;padding:8px;transition:color .3s;}
-  .sync-status.syncing{color:var(--gold);}
-  .sync-status.saved{color:var(--green);}
+  /* GOAL FORM */
+  .goal-form{display:flex;flex-direction:column;gap:10px;}
+  .goal-form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 
-  @media(max-width:580px){
-    .dep-col-headers,.dep-row{grid-template-columns:90px 100px 1fr 90px 66px;}
-    .dep-cell,.dep-col-h{padding:11px 10px;}
-    .form-grid{grid-template-columns:1fr 1fr;}
+  .footer{text-align:center;margin-top:36px;font-size:10px;color:var(--muted2);letter-spacing:3px;font-family:'Space Mono',monospace;}
+
+  /* DESKTOP UPGRADES */
+  @media(min-width:600px){
+    #app{padding:32px 24px 100px;}
+    .brand{font-size:32px;}
+    .card{padding:26px 28px;}
+    .form-row-2{grid-template-columns:150px 150px 1fr;}
+    .stat-val{font-size:18px;}
+    .goal-nums{grid-template-columns:repeat(4,1fr);}
+    .goal-form{flex-direction:row;align-items:flex-end;}
+    .goal-form-row{display:contents;}
+    .btn-gold{width:auto;}
   }
-  .footer{text-align:center;margin-top:40px;font-size:10px;color:var(--muted2);letter-spacing:3px;font-family:'Space Mono',monospace;}
 </style>
 </head>
 <body>
@@ -189,7 +200,7 @@
   <div class="loader-track"><div class="loader-fill" id="loaderFill"></div></div>
 </div>
 
-<!-- AUTH SCREEN -->
+<!-- AUTH -->
 <div id="authScreen">
   <div class="auth-box">
     <div class="auth-brand">VAULT</div>
@@ -198,14 +209,8 @@
       <div class="auth-tab active" onclick="setAuthTab('login')">LOGIN</div>
       <div class="auth-tab" onclick="setAuthTab('signup')">SIGN UP</div>
     </div>
-    <div class="auth-field">
-      <label>Email</label>
-      <input type="email" id="authEmail" placeholder="you@example.com" onkeydown="if(event.key==='Enter')doAuth()">
-    </div>
-    <div class="auth-field">
-      <label>Password</label>
-      <input type="password" id="authPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter')doAuth()">
-    </div>
+    <div class="auth-field"><label>Email</label><input type="email" id="authEmail" placeholder="you@example.com" autocomplete="email" onkeydown="if(event.key==='Enter')doAuth()"></div>
+    <div class="auth-field"><label>Password</label><input type="password" id="authPassword" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doAuth()"></div>
     <button class="btn-auth" id="authBtn" onclick="doAuth()">LOGIN</button>
     <div class="auth-err" id="authErr"></div>
     <div class="auth-loading" id="authLoading">AUTHENTICATING...</div>
@@ -238,8 +243,8 @@
 
   <div class="stats-row">
     <div class="stat-box"><span class="stat-val" id="sCount">0</span><span class="stat-key">Deposits</span></div>
-    <div class="stat-box"><span class="stat-val gold" id="sAvg">$0.00</span><span class="stat-key">Avg Deposit</span></div>
-    <div class="stat-box"><span class="stat-val green" id="sNext">—</span><span class="stat-key">Next Deposit</span></div>
+    <div class="stat-box"><span class="stat-val gold" id="sAvg">$0.00</span><span class="stat-key">Avg</span></div>
+    <div class="stat-box"><span class="stat-val green" id="sNext">—</span><span class="stat-key">Next</span></div>
   </div>
 
   <div class="sync-status" id="syncStatus">SYNCED</div>
@@ -253,7 +258,7 @@
   <div class="tab-panel active" id="tab-deposits">
     <div class="card">
       <div class="card-label">Plan a Deposit</div>
-      <div class="form-grid">
+      <div class="form-row-2">
         <div class="field"><label>Date</label><input type="date" id="depDate"></div>
         <div class="field"><label>Day</label>
           <select id="depDay">
@@ -264,31 +269,27 @@
         <div class="field"><label>Amount ($)</label>
           <div class="prefix-row">
             <div class="prefix-box">$</div>
-            <input type="number" id="depAmt" min="0.01" step="0.01" placeholder="0.00" style="border-radius:0 10px 10px 0;border-left:none;">
+            <input type="number" id="depAmt" min="0.01" step="0.01" placeholder="0.00" inputmode="decimal" style="border-radius:0 10px 10px 0;border-left:none;">
           </div>
         </div>
       </div>
-      <div class="field" style="margin-top:14px;"><label>Note (optional)</label>
-        <input type="text" id="depNote" placeholder="e.g. Payday, Tax return..." maxlength="50">
+      <div class="form-full">
+        <div class="field"><label>Note (optional)</label>
+          <input type="text" id="depNote" placeholder="e.g. Payday, Tax return..." maxlength="50">
+        </div>
       </div>
-      <div style="margin-top:16px;">
-        <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Assign to Goal</div>
+      <div style="margin-top:4px;">
+        <div class="chip-label">Assign to Goal</div>
         <div class="chip-row" id="goalChips"><div class="chip selected" data-id="" onclick="selectChip(this)">No Goal</div></div>
       </div>
       <div class="err" id="depErr"></div>
       <button class="btn-gold-full" onclick="addDeposit()">+ ADD DEPOSIT</button>
     </div>
-    <div class="deposit-table">
-      <div class="dep-col-headers">
-        <div class="dep-col-h">Day</div>
-        <div class="dep-col-h">Date</div>
-        <div class="dep-col-h">Note / Goal</div>
-        <div class="dep-col-h">Amount</div>
-        <div class="dep-col-h" style="text-align:right;">Remove</div>
-      </div>
-      <div id="depositRows"><div class="empty-state">No deposits planned yet</div></div>
+
+    <div class="deposit-list" id="depositRows">
+      <div class="empty-state">No deposits planned yet</div>
     </div>
-    <button class="btn-ghost" style="width:100%;margin-bottom:20px;" onclick="clearDeposits()">✕ &nbsp; Clear All Deposits</button>
+    <button class="btn-ghost" style="margin-bottom:14px;" onclick="clearDeposits()">✕ &nbsp; Clear All Deposits</button>
   </div>
 
   <!-- GOALS TAB -->
@@ -296,14 +297,16 @@
     <div class="card">
       <div class="card-label">Add a Goal</div>
       <div class="goal-form">
-        <div class="field"><label>Goal Name</label><input type="text" id="goalName" placeholder="Holiday, Car, House..." maxlength="40"></div>
-        <div class="field"><label>Target ($)</label>
-          <div class="prefix-row">
-            <div class="prefix-box">$</div>
-            <input type="number" id="goalAmt" min="1" step="1" placeholder="5000" style="border-radius:0 10px 10px 0;border-left:none;">
+        <div class="goal-form-row">
+          <div class="field"><label>Goal Name</label><input type="text" id="goalName" placeholder="Holiday, Car, House..." maxlength="40"></div>
+          <div class="field"><label>Target ($)</label>
+            <div class="prefix-row">
+              <div class="prefix-box">$</div>
+              <input type="number" id="goalAmt" min="1" step="1" placeholder="5000" inputmode="numeric" style="border-radius:0 10px 10px 0;border-left:none;">
+            </div>
           </div>
         </div>
-        <button class="btn-gold" onclick="addGoal()" style="height:46px;align-self:end;">+ ADD</button>
+        <button class="btn-gold" onclick="addGoal()">+ ADD GOAL</button>
       </div>
       <div class="err" id="goalErr"></div>
     </div>
@@ -320,7 +323,6 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, si
 import { getFirestore, doc, setDoc, getDoc, onSnapshot }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// ── FIREBASE CONFIG ──
 const firebaseConfig = {
   apiKey: "AIzaSyCpjOqv3ULh-WAFjMAA5kN9tW3PSYZYvY0",
   authDomain: "vault-fd943.firebaseapp.com",
@@ -333,215 +335,156 @@ const fbApp = initializeApp(firebaseConfig);
 const auth  = getAuth(fbApp);
 const db    = getFirestore(fbApp);
 
-// ── LOADER ──
-const LOADER_DURATION = 6500; // ms — hard minimum load time
-const loaderStart = Date.now();
-let loaderDone = false;
-let pendingReveal = null;
-
-(function() {
-  const rain = document.getElementById('dollarRain');
-  const fill = document.getElementById('loaderFill');
-  const chars = ['$','$','$','€','£','¥','₿','$'];
-  for (let i = 0; i < 45; i++) {
-    const el = document.createElement('span');
-    el.className = 'dollar-char';
-    el.textContent = chars[Math.floor(Math.random()*chars.length)];
-    el.style.cssText = `left:${Math.random()*100}vw;animation-duration:${2+Math.random()*4}s;animation-delay:${Math.random()*3}s;font-size:${12+Math.random()*22}px;`;
+// ── LOADER (6.5s hard minimum) ──
+const LOADER_DURATION = 6500;
+let loaderDone=false, pendingReveal=null;
+(function(){
+  const rain=document.getElementById('dollarRain'), fill=document.getElementById('loaderFill');
+  const chars=['$','$','$','€','£','¥','₿','$'];
+  for(let i=0;i<45;i++){
+    const el=document.createElement('span'); el.className='dollar-char';
+    el.textContent=chars[Math.floor(Math.random()*chars.length)];
+    el.style.cssText=`left:${Math.random()*100}vw;animation-duration:${2+Math.random()*4}s;animation-delay:${Math.random()*3}s;font-size:${12+Math.random()*22}px;`;
     rain.appendChild(el);
   }
-  // Animate bar over exactly LOADER_DURATION ms
-  const t0 = performance.now();
-  function step(now) {
-    const elapsed = now - t0;
-    const pct = Math.min(100, (elapsed / LOADER_DURATION) * 100);
-    // Add slight randomness so it doesn't look mechanical
-    fill.style.width = Math.min(100, pct + Math.sin(elapsed/400)*2) + '%';
-    if (elapsed < LOADER_DURATION) {
-      requestAnimationFrame(step);
-    } else {
-      fill.style.width = '100%';
-      loaderDone = true;
-      setTimeout(() => {
-        document.getElementById('loader').classList.add('hidden');
-        if (pendingReveal) { pendingReveal(); pendingReveal = null; }
-      }, 300);
+  const t0=performance.now();
+  function step(now){
+    const elapsed=now-t0, pct=Math.min(100,(elapsed/LOADER_DURATION)*100);
+    fill.style.width=Math.min(100,pct+Math.sin(elapsed/400)*2)+'%';
+    if(elapsed<LOADER_DURATION){ requestAnimationFrame(step); }
+    else{
+      fill.style.width='100%'; loaderDone=true;
+      setTimeout(()=>{ document.getElementById('loader').classList.add('hidden'); if(pendingReveal){pendingReveal();pendingReveal=null;} },300);
     }
   }
   requestAnimationFrame(step);
 })();
-
-function revealWhenReady(fn) {
-  if (loaderDone) {
-    fn();
-  } else {
-    pendingReveal = fn;
-  }
-}
+function revealWhenReady(fn){ if(loaderDone)fn(); else pendingReveal=fn; }
 
 // ── CLOCK ──
-function tickClock() {
-  const n = new Date();
-  document.getElementById('clockTime').textContent = n.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  document.getElementById('clockDate').textContent = n.toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+function tickClock(){
+  const n=new Date();
+  document.getElementById('clockTime').textContent=n.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  document.getElementById('clockDate').textContent=n.toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'});
 }
 setInterval(tickClock,1000); tickClock();
 
 // ── STATE ──
-let deposits = [], goals = [], selGoalId = '', currentUid = null, unsubSnapshot = null;
+let deposits=[], goals=[], selGoalId='', currentUid=null, unsubSnapshot=null;
 
 // ── AUTH STATE ──
-onAuthStateChanged(auth, user => {
-  if (user) {
-    currentUid = user.uid;
-    document.getElementById('userEmail').textContent = user.email;
-    revealWhenReady(() => {
-      document.getElementById('authScreen').style.display = 'none';
-      document.getElementById('app').style.display = 'block';
-      setTimeout(() => document.getElementById('app').classList.add('visible'), 50);
+onAuthStateChanged(auth, user=>{
+  if(user){
+    currentUid=user.uid;
+    document.getElementById('userEmail').textContent=user.email;
+    revealWhenReady(()=>{
+      document.getElementById('authScreen').style.display='none';
+      document.getElementById('app').style.display='block';
+      setTimeout(()=>document.getElementById('app').classList.add('visible'),50);
       listenData();
     });
   } else {
-    currentUid = null;
-    if (unsubSnapshot) { unsubSnapshot(); unsubSnapshot = null; }
-    revealWhenReady(() => {
+    currentUid=null;
+    if(unsubSnapshot){unsubSnapshot();unsubSnapshot=null;}
+    revealWhenReady(()=>{
       document.getElementById('app').classList.remove('visible');
-      document.getElementById('app').style.display = 'none';
-      document.getElementById('authScreen').style.display = 'flex';
-      setTimeout(() => document.getElementById('authScreen').classList.add('visible'), 50);
+      document.getElementById('app').style.display='none';
+      document.getElementById('authScreen').style.display='flex';
+      setTimeout(()=>document.getElementById('authScreen').classList.add('visible'),50);
     });
   }
 });
 
 // ── FIRESTORE ──
-function listenData() {
-  if (unsubSnapshot) unsubSnapshot();
-  const ref = doc(db, 'users', currentUid);
-  unsubSnapshot = onSnapshot(ref, snap => {
-    if (snap.exists()) {
-      const d = snap.data();
-      deposits = d.deposits || [];
-      goals    = d.goals    || [];
-    } else {
-      deposits = []; goals = [];
-    }
-    renderChips(); renderDeposits(); renderGoals(); recalcPool();
-    setSyncStatus('saved');
+function listenData(){
+  if(unsubSnapshot)unsubSnapshot();
+  unsubSnapshot=onSnapshot(doc(db,'users',currentUid),snap=>{
+    if(snap.exists()){const d=snap.data();deposits=d.deposits||[];goals=d.goals||[];}
+    else{deposits=[];goals=[];}
+    renderChips();renderDeposits();renderGoals();recalcPool();setSyncStatus('saved');
   });
 }
-
-async function saveData() {
-  if (!currentUid) return;
-  setSyncStatus('syncing');
-  try {
-    await setDoc(doc(db,'users',currentUid), { deposits, goals }, { merge: true });
-    setSyncStatus('saved');
-  } catch(e) {
-    setSyncStatus('error');
-    console.error(e);
-  }
+async function saveData(){
+  if(!currentUid)return; setSyncStatus('syncing');
+  try{ await setDoc(doc(db,'users',currentUid),{deposits,goals},{merge:true}); setSyncStatus('saved'); }
+  catch(e){ setSyncStatus('error'); }
 }
-
-function setSyncStatus(state) {
-  const el = document.getElementById('syncStatus');
-  el.className = 'sync-status ' + state;
-  el.textContent = state === 'syncing' ? '⟳ SYNCING...' : state === 'saved' ? '✓ SYNCED' : '✗ SYNC ERROR';
+function setSyncStatus(s){
+  const el=document.getElementById('syncStatus');
+  el.className='sync-status '+s;
+  el.textContent=s==='syncing'?'⟳ SYNCING...':s==='saved'?'✓ SYNCED':'✗ SYNC ERROR';
 }
 
 // ── AUTH UI ──
-let authMode = 'login';
-window.setAuthTab = function(mode) {
-  authMode = mode;
-  document.querySelectorAll('.auth-tab').forEach((t,i) => t.classList.toggle('active',['login','signup'][i]===mode));
-  document.getElementById('authBtn').textContent = mode==='login' ? 'LOGIN' : 'SIGN UP';
+let authMode='login';
+window.setAuthTab=function(mode){
+  authMode=mode;
+  document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',['login','signup'][i]===mode));
+  document.getElementById('authBtn').textContent=mode==='login'?'LOGIN':'SIGN UP';
   document.getElementById('authErr').classList.remove('show');
 };
-
-window.doAuth = async function() {
-  const email    = document.getElementById('authEmail').value.trim();
-  const password = document.getElementById('authPassword').value;
-  const errEl    = document.getElementById('authErr');
-  const loadEl   = document.getElementById('authLoading');
+window.doAuth=async function(){
+  const email=document.getElementById('authEmail').value.trim();
+  const password=document.getElementById('authPassword').value;
+  const errEl=document.getElementById('authErr'),loadEl=document.getElementById('authLoading');
   errEl.classList.remove('show');
-  if (!email || !password) { errEl.textContent='Please enter email and password.'; errEl.classList.add('show'); return; }
-  loadEl.classList.add('show');
-  document.getElementById('authBtn').disabled = true;
-  try {
-    if (authMode === 'login') {
-      await signInWithEmailAndPassword(auth, email, password);
-    } else {
-      await createUserWithEmailAndPassword(auth, email, password);
-    }
-  } catch(e) {
-    const msgs = {
-      'auth/user-not-found':'No account found with this email.',
-      'auth/wrong-password':'Incorrect password.',
-      'auth/email-already-in-use':'An account with this email already exists.',
-      'auth/weak-password':'Password must be at least 6 characters.',
-      'auth/invalid-email':'Please enter a valid email address.',
-      'auth/invalid-credential':'Incorrect email or password.',
-    };
-    errEl.textContent = msgs[e.code] || e.message;
-    errEl.classList.add('show');
-  } finally {
-    loadEl.classList.remove('show');
-    document.getElementById('authBtn').disabled = false;
-  }
+  if(!email||!password){errEl.textContent='Please enter email and password.';errEl.classList.add('show');return;}
+  loadEl.classList.add('show'); document.getElementById('authBtn').disabled=true;
+  try{
+    if(authMode==='login')await signInWithEmailAndPassword(auth,email,password);
+    else await createUserWithEmailAndPassword(auth,email,password);
+  }catch(e){
+    const msgs={'auth/user-not-found':'No account found.','auth/wrong-password':'Incorrect password.','auth/email-already-in-use':'Email already in use.','auth/weak-password':'Password must be 6+ characters.','auth/invalid-email':'Invalid email.','auth/invalid-credential':'Incorrect email or password.'};
+    errEl.textContent=msgs[e.code]||e.message; errEl.classList.add('show');
+  }finally{loadEl.classList.remove('show');document.getElementById('authBtn').disabled=false;}
 };
-
-window.signOut = async function() {
-  await fbSignOut(auth);
-};
+window.signOut=async function(){ await fbSignOut(auth); };
 
 // ── TABS ──
-window.switchTab = function(name) {
-  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active',['deposits','goals'][i]===name));
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+window.switchTab=function(name){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['deposits','goals'][i]===name));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
 };
 
-// ── DATE/DAY SYNC ──
-function initDate() {
-  const now = new Date();
-  document.getElementById('depDate').valueAsDate = now;
+// ── DATE/DAY ──
+(function(){
+  const now=new Date();
+  document.getElementById('depDate').valueAsDate=now;
   const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  document.getElementById('depDay').value = days[now.getDay()];
-}
-initDate();
-
-document.getElementById('depDate').addEventListener('change', function() {
-  if (!this.value) return;
+  document.getElementById('depDay').value=days[now.getDay()];
+})();
+document.getElementById('depDate').addEventListener('change',function(){
+  if(!this.value)return;
   const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  document.getElementById('depDay').value = days[new Date(this.value+'T12:00:00').getDay()];
+  document.getElementById('depDay').value=days[new Date(this.value+'T12:00:00').getDay()];
 });
-document.getElementById('depDay').addEventListener('change', function() {
+document.getElementById('depDay').addEventListener('change',function(){
   const dayNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  const target = dayNames.indexOf(this.value);
-  const d = new Date(); d.setHours(0,0,0,0);
-  let count=0;
-  while(d.getDay()!==target && count++<8) d.setDate(d.getDate()+1);
-  document.getElementById('depDate').valueAsDate = d;
+  const target=dayNames.indexOf(this.value);
+  const d=new Date(); d.setHours(0,0,0,0);
+  let c=0; while(d.getDay()!==target&&c++<8)d.setDate(d.getDate()+1);
+  document.getElementById('depDate').valueAsDate=d;
 });
 
 // ── CHIPS ──
-function renderChips() {
-  const c = document.getElementById('goalChips');
-  c.innerHTML = `<div class="chip${selGoalId===''?' selected':''}" data-id="" onclick="selectChip(this)">No Goal</div>`;
-  goals.forEach(g => {
-    const d = document.createElement('div');
+function renderChips(){
+  const c=document.getElementById('goalChips');
+  c.innerHTML=`<div class="chip${selGoalId===''?' selected':''}" data-id="" onclick="selectChip(this)">No Goal</div>`;
+  goals.forEach(g=>{
+    const d=document.createElement('div');
     d.className='chip'+(String(selGoalId)===String(g.id)?' selected':'');
-    d.dataset.id=String(g.id); d.textContent=g.name;
-    d.onclick=()=>selectChip(d);
+    d.dataset.id=String(g.id); d.textContent=g.name; d.onclick=()=>selectChip(d);
     c.appendChild(d);
   });
 }
-window.selectChip = function(el) {
+window.selectChip=function(el){
   document.querySelectorAll('.chip').forEach(c=>c.classList.remove('selected'));
   el.classList.add('selected'); selGoalId=el.dataset.id;
 };
 
-// ── ADD DEPOSIT ──
-window.addDeposit = function() {
+// ── DEPOSITS ──
+window.addDeposit=function(){
   const err=document.getElementById('depErr'); err.classList.remove('show');
   const date=document.getElementById('depDate').value;
   const day=document.getElementById('depDay').value;
@@ -555,40 +498,45 @@ window.addDeposit = function() {
   document.getElementById('depNote').value='';
   saveData(); renderDeposits(); renderGoals(); recalcPool();
 };
-
-window.removeDeposit = function(id) {
+window.removeDeposit=function(id){
   deposits=deposits.filter(d=>String(d.id)!==String(id));
   saveData(); renderDeposits(); renderGoals(); recalcPool();
 };
-
-window.clearDeposits = function() {
+window.clearDeposits=function(){
   if(!deposits.length)return;
   if(!confirm('Clear all planned deposits?'))return;
   deposits=[]; saveData(); renderDeposits(); renderGoals(); recalcPool();
 };
 
-function renderDeposits() {
-  const rows=document.getElementById('depositRows');
-  if(!deposits.length){rows.innerHTML='<div class="empty-state">No deposits planned yet</div>';return;}
+function renderDeposits(){
+  const container=document.getElementById('depositRows');
+  if(!deposits.length){container.innerHTML='<div class="empty-state">No deposits planned yet</div>';return;}
   const gMap={}; goals.forEach(g=>gMap[String(g.id)]=g.name);
   const today=new Date(); today.setHours(0,0,0,0);
-  rows.innerHTML=deposits.map(d=>{
-    const depDate=new Date(d.date+'T12:00:00');
-    const isPast=depDate<today;
-    const fmtD=depDate.toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'});
-    const goalTag=d.goalId&&gMap[String(d.goalId)]?`<span class="dep-goal-tag">${gMap[String(d.goalId)]}</span>`:'';
-    return `<div class="dep-row" style="${isPast?'opacity:0.5':''}">
-      <div class="dep-cell"><div class="dep-day">${d.day.slice(0,3).toUpperCase()}</div></div>
-      <div class="dep-cell"><div class="dep-date-txt">${fmtD}</div></div>
-      <div class="dep-cell"><span class="dep-note">${d.note||'—'}</span>&nbsp;${goalTag}</div>
-      <div class="dep-cell"><span class="dep-amount">+$${fmt(d.amount)}</span></div>
-      <div class="dep-cell"><button class="dep-remove" onclick="removeDeposit('${d.id}')">✕</button></div>
+  container.innerHTML=deposits.map(d=>{
+    const depDate=new Date(d.date+'T12:00:00'), isPast=depDate<today;
+    const dayShort=d.day.slice(0,3).toUpperCase();
+    const dateStr=depDate.toLocaleDateString('en-AU',{day:'numeric',month:'short'});
+    const goalName=d.goalId&&gMap[String(d.goalId)]?gMap[String(d.goalId)]:'';
+    return `<div class="dep-card${isPast?' past':''}">
+      <div class="dep-day-badge">
+        <div class="dep-day-short">${dayShort}</div>
+        <div class="dep-day-date">${dateStr}</div>
+      </div>
+      <div class="dep-info">
+        <div class="dep-note-txt${!d.note?' empty':''}">${d.note||'No note'}</div>
+        ${goalName?`<div class="dep-goal-tag">${goalName}</div>`:''}
+      </div>
+      <div class="dep-right">
+        <div class="dep-amount">+$${fmt(d.amount)}</div>
+        <button class="dep-remove" onclick="removeDeposit('${d.id}')">✕</button>
+      </div>
     </div>`;
   }).join('');
 }
 
 // ── GOALS ──
-window.addGoal = function() {
+window.addGoal=function(){
   const err=document.getElementById('goalErr'); err.classList.remove('show');
   const name=document.getElementById('goalName').value.trim();
   const amt=parseFloat(document.getElementById('goalAmt').value);
@@ -599,8 +547,7 @@ window.addGoal = function() {
   document.getElementById('goalAmt').value='';
   saveData(); renderGoals(); renderChips(); recalcPool();
 };
-
-window.removeGoal = function(id) {
+window.removeGoal=function(id){
   if(!confirm('Remove this goal?'))return;
   goals=goals.filter(g=>String(g.id)!==String(id));
   deposits.forEach(d=>{if(String(d.goalId)===String(id))d.goalId='';});
@@ -608,26 +555,23 @@ window.removeGoal = function(id) {
   saveData(); renderGoals(); renderChips(); renderDeposits(); recalcPool();
 };
 
-function renderGoals() {
+function renderGoals(){
   const container=document.getElementById('goalCards');
   if(!goals.length){container.innerHTML='<div class="empty-state">No goals yet — add one above</div>';return;}
   container.innerHTML=goals.map(g=>{
     const saved=deposits.filter(d=>String(d.goalId)===String(g.id)).reduce((s,d)=>s+d.amount,0);
-    const remaining=Math.max(0,g.target-saved);
-    const pct=Math.min(100,(saved/g.target)*100);
-    const done=remaining<=0;
+    const remaining=Math.max(0,g.target-saved), pct=Math.min(100,(saved/g.target)*100), done=remaining<=0;
     let weeksStr='—';
     const gDeps=deposits.filter(d=>String(d.goalId)===String(g.id)).sort((a,b)=>a.date.localeCompare(b.date));
     if(!done&&gDeps.length>=2){
       const d1=new Date(gDeps[0].date+'T12:00:00'),d2=new Date(gDeps[gDeps.length-1].date+'T12:00:00');
-      const wkSpan=Math.max((d2-d1)/(7*24*60*60*1000),.14);
-      const rate=saved/wkSpan;
+      const wkSpan=Math.max((d2-d1)/(7*24*60*60*1000),.14), rate=saved/wkSpan;
       if(rate>0)weeksStr=Math.ceil(remaining/rate)+' wks';
-    } else if(!done&&gDeps.length===1){weeksStr='~'+Math.ceil(remaining/gDeps[0].amount)+' deps';}
+    }else if(!done&&gDeps.length===1){weeksStr='~'+Math.ceil(remaining/gDeps[0].amount)+' deps';}
     return `<div class="goal-card${done?' complete':''}" id="gc-${g.id}">
       <div class="goal-header">
         <div><div class="goal-name">${g.name}</div><div class="goal-target-txt">TARGET · $${fmt(g.target)}</div></div>
-        <button class="btn-ghost" onclick="removeGoal('${g.id}')" style="font-size:10px;padding:6px 10px;">REMOVE</button>
+        <button class="goal-remove-btn" onclick="removeGoal('${g.id}')">REMOVE</button>
       </div>
       <div class="goal-nums">
         <div class="gn-block"><span class="gn-val green">$${fmt(saved)}</span><span class="gn-key">Planned</span></div>
@@ -643,17 +587,14 @@ function renderGoals() {
   setTimeout(()=>{
     goals.forEach(g=>{
       const saved=deposits.filter(d=>String(d.goalId)===String(g.id)).reduce((s,d)=>s+d.amount,0);
-      const pct=Math.min(100,(saved/g.target)*100);
       const el=document.getElementById('gpf-'+g.id);
-      if(el)el.style.width=pct+'%';
+      if(el)el.style.width=Math.min(100,(saved/g.target)*100)+'%';
     });
   },80);
 }
 
-function recalcPool() {
-  const total=deposits.reduce((s,d)=>s+d.amount,0);
-  const count=deposits.length;
-  const avg=count>0?total/count:0;
+function recalcPool(){
+  const total=deposits.reduce((s,d)=>s+d.amount,0), count=deposits.length, avg=count>0?total/count:0;
   animCount('poolNum',total);
   document.getElementById('sCount').textContent=count;
   document.getElementById('sAvg').textContent=count>0?'$'+fmt(avg):'$0.00';
@@ -666,16 +607,12 @@ function recalcPool() {
     const pct=Math.min(100,(total/totalGoal)*100);
     setTimeout(()=>{document.getElementById('poolProg').style.width=pct+'%';},80);
     document.getElementById('poolPct').textContent=pct.toFixed(1)+'% of all goals funded';
-  } else {
-    document.getElementById('poolProg').style.width='0%';
-    document.getElementById('poolPct').textContent='';
-  }
+  }else{document.getElementById('poolProg').style.width='0%';document.getElementById('poolPct').textContent='';}
 }
 
 function fmt(n){return n.toLocaleString('en-AU',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function animCount(id,target){
-  const el=document.getElementById(id);
-  const dur=700,t0=performance.now();
+  const el=document.getElementById(id),dur=700,t0=performance.now();
   const from=parseFloat(el.textContent.replace(/,/g,''))||0;
   (function step(now){const p=Math.min((now-t0)/dur,1),e=1-Math.pow(1-p,3);el.textContent=fmt(from+(target-from)*e);if(p<1)requestAnimationFrame(step);else el.textContent=fmt(target);})(t0);
 }
