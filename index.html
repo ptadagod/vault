@@ -11,16 +11,59 @@
   body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
 
   /* LOADER */
-  #loader{position:fixed;inset:0;background:#040404;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .7s ease,visibility .7s ease;}
+  #loader{position:fixed;inset:0;background:#040404;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .8s ease,visibility .8s ease;}
   #loader.hidden{opacity:0;visibility:hidden;}
   .dollar-rain{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
   .dollar-char{position:absolute;font-family:'Space Mono',monospace;color:var(--gold);opacity:0;animation:fall linear infinite;top:-40px;user-select:none;}
   @keyframes fall{0%{transform:translateY(0) rotate(0deg);opacity:0;}8%{opacity:.7;}88%{opacity:.2;}100%{transform:translateY(110vh) rotate(540deg);opacity:0;}}
-  .loader-logo{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,16vw,100px);color:var(--gold);letter-spacing:10px;animation:glow 1.6s ease-in-out infinite;position:relative;z-index:1;}
+
+  /* VAULT LOCK */
+  .vault-wrap{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;}
+  .vault-ring{width:150px;height:150px;border-radius:50%;border:3px solid var(--gold-dark);background:radial-gradient(circle at 38% 32%,#201c0e,#0c0c08);box-shadow:0 0 40px rgba(201,168,76,.15),inset 0 0 30px rgba(0,0,0,.7);position:relative;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .vault-ring::before{content:'';position:absolute;inset:-7px;border-radius:50%;border:2px solid rgba(201,168,76,.12);}
+  .vault-ring::after{content:'';position:absolute;inset:7px;border-radius:50%;border:1px solid rgba(201,168,76,.07);}
+  .vault-ticks{position:absolute;inset:0;border-radius:50%;}
+  .vault-tick{position:absolute;width:2px;background:var(--gold-dark);left:calc(50% - 1px);top:4px;opacity:.4;transform-origin:calc(50%) 71px;}
+  .vault-tick.major{height:13px;background:var(--gold);opacity:.8;width:3px;left:calc(50% - 1.5px);}
+  .vault-tick.minor{height:7px;}
+  .vault-dial{width:96px;height:96px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#2a2208,#0e0e06);border:2px solid var(--gold-dark);box-shadow:0 0 16px rgba(201,168,76,.12),inset 0 2px 4px rgba(255,255,255,.04);position:relative;animation:dialSpin 1.8s cubic-bezier(.4,0,.2,1) infinite;}
+  @keyframes dialSpin{
+    0%  {transform:rotate(0deg);}
+    18% {transform:rotate(-155deg);}
+    36% {transform:rotate(-155deg);}
+    52% {transform:rotate(85deg);}
+    66% {transform:rotate(85deg);}
+    80% {transform:rotate(-40deg);}
+    92% {transform:rotate(-40deg);}
+    100%{transform:rotate(0deg);}
+  }
+  .vault-dial::before{content:'';position:absolute;inset:9px;border-radius:50%;border:1px solid rgba(201,168,76,.18);}
+  .vault-notch{position:absolute;width:3px;height:13px;background:linear-gradient(to bottom,var(--gold-light),var(--gold-dark));border-radius:2px;left:calc(50% - 1.5px);top:5px;transform-origin:50% 43px;}
+  .vault-notch:nth-child(1){transform:rotate(0deg);}
+  .vault-notch:nth-child(2){transform:rotate(51.4deg);}
+  .vault-notch:nth-child(3){transform:rotate(102.8deg);}
+  .vault-notch:nth-child(4){transform:rotate(154.2deg);}
+  .vault-notch:nth-child(5){transform:rotate(205.6deg);}
+  .vault-notch:nth-child(6){transform:rotate(257deg);}
+  .vault-notch:nth-child(7){transform:rotate(308.4deg);}
+  .vault-knob{position:absolute;width:20px;height:20px;border-radius:50%;background:radial-gradient(circle at 35% 30%,var(--gold-light),var(--gold-dark));box-shadow:0 0 10px rgba(201,168,76,.5);}
+  .vault-knob::after{content:'';position:absolute;inset:5px;border-radius:50%;background:rgba(255,255,255,.25);}
+  .vault-handle{position:absolute;right:-20px;top:50%;transform:translateY(-50%);width:18px;height:40px;border-radius:0 8px 8px 0;border:2.5px solid var(--gold-dark);border-left:none;}
+  .vault-ring.unlocked{animation:unlockFlash .6s ease forwards;}
+  .vault-dial.unlocked{animation:none !important;transform:rotate(0deg);transition:transform .3s ease;}
+  @keyframes unlockFlash{
+    0%  {box-shadow:0 0 40px rgba(201,168,76,.15),inset 0 0 30px rgba(0,0,0,.7);}
+    50% {box-shadow:0 0 90px rgba(201,168,76,.7),0 0 140px rgba(201,168,76,.3),inset 0 0 20px rgba(0,0,0,.3);}
+    100%{box-shadow:0 0 60px rgba(45,222,152,.5),0 0 100px rgba(45,222,152,.25),inset 0 0 30px rgba(0,0,0,.4);}
+  }
+  .loader-logo{font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,12vw,68px);color:var(--gold);letter-spacing:10px;animation:glow 1.6s ease-in-out infinite;position:relative;z-index:1;}
   @keyframes glow{0%,100%{text-shadow:0 0 30px rgba(201,168,76,.25);}50%{text-shadow:0 0 70px rgba(201,168,76,.65),0 0 120px rgba(201,168,76,.2);}}
-  .loader-sub{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--muted);text-transform:uppercase;z-index:1;}
+  .loader-status{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--muted);text-transform:uppercase;z-index:1;min-height:14px;transition:color .4s;}
+  .loader-status.cracking{color:var(--gold);}
+  .loader-status.unlocked{color:var(--green);}
   .loader-track{width:200px;height:2px;background:#1e1e1e;border-radius:2px;overflow:hidden;z-index:1;}
-  .loader-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--gold-dark),var(--gold-light));}
+  .loader-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--gold-dark),var(--gold-light));transition:background .5s;}
+  .loader-fill.done{background:linear-gradient(90deg,#1a8a60,var(--green));}
 
   /* AUTH */
   #authScreen{position:fixed;inset:0;background:var(--bg);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity .5s ease;}
@@ -44,8 +87,19 @@
   .auth-loading.show{display:block;}
 
   /* APP */
-  #app{max-width:860px;margin:0 auto;padding:18px 14px 100px;opacity:0;transform:translateY(18px);transition:opacity .6s ease .15s,transform .6s ease .15s;display:none;}
-  #app.visible{opacity:1;transform:translateY(0);}
+  #app{max-width:860px;margin:0 auto;padding:18px 14px 100px;display:none;}
+
+  /* STAGGERED DROP-IN */
+  @keyframes dropIn{0%{opacity:0;transform:translateY(-36px) scale(.97);}60%{transform:translateY(6px) scale(1.01);}80%{transform:translateY(-3px) scale(.995);}100%{opacity:1;transform:translateY(0) scale(1);}}
+  .drop-el{opacity:0;}
+  #app.visible .drop-el{animation:dropIn .55s cubic-bezier(.22,1,.36,1) both;}
+  #app.visible .header     {animation-delay:.05s;}
+  #app.visible .pool-hero  {animation-delay:.15s;}
+  #app.visible .stats-row  {animation-delay:.25s;}
+  #app.visible .sync-status{animation-delay:.3s;}
+  #app.visible .tabs       {animation-delay:.35s;}
+  #app.visible #tab-deposits{animation-delay:.43s;}
+  #app.visible .footer     {animation-delay:.55s;}
 
   /* HEADER */
   .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border);gap:8px;}
@@ -195,8 +249,24 @@
 <!-- LOADER -->
 <div id="loader">
   <div class="dollar-rain" id="dollarRain"></div>
+  <div class="vault-wrap">
+    <div class="vault-ring" id="vaultRing">
+      <div class="vault-ticks" id="vaultTicks"></div>
+      <div class="vault-dial" id="vaultDial">
+        <div class="vault-notch"></div>
+        <div class="vault-notch"></div>
+        <div class="vault-notch"></div>
+        <div class="vault-notch"></div>
+        <div class="vault-notch"></div>
+        <div class="vault-notch"></div>
+        <div class="vault-notch"></div>
+        <div class="vault-knob"></div>
+      </div>
+      <div class="vault-handle"></div>
+    </div>
+  </div>
   <div class="loader-logo">VAULT</div>
-  <div class="loader-sub">Loading your savings</div>
+  <div class="loader-status" id="loaderStatus">Cracking the lock...</div>
   <div class="loader-track"><div class="loader-fill" id="loaderFill"></div></div>
 </div>
 
@@ -219,7 +289,7 @@
 
 <!-- APP -->
 <div id="app">
-  <header class="header">
+  <header class="header drop-el">
     <div class="brand">Vau<em>■</em>lt</div>
     <div class="header-right">
       <div class="user-info">
@@ -233,7 +303,7 @@
     </div>
   </header>
 
-  <div class="pool-hero">
+  <div class="pool-hero drop-el">
     <div class="pool-label">Total Planned Savings</div>
     <div class="pool-total"><span class="cur">$</span><span id="poolNum">0.00</span></div>
     <div class="pool-sub" id="poolSub">No deposits planned yet</div>
@@ -241,21 +311,21 @@
     <div class="prog-pct" id="poolPct"></div>
   </div>
 
-  <div class="stats-row">
+  <div class="stats-row drop-el">
     <div class="stat-box"><span class="stat-val" id="sCount">0</span><span class="stat-key">Deposits</span></div>
     <div class="stat-box"><span class="stat-val gold" id="sAvg">$0.00</span><span class="stat-key">Avg</span></div>
     <div class="stat-box"><span class="stat-val green" id="sNext">—</span><span class="stat-key">Next</span></div>
   </div>
 
-  <div class="sync-status" id="syncStatus">SYNCED</div>
+  <div class="sync-status drop-el" id="syncStatus">SYNCED</div>
 
-  <div class="tabs">
+  <div class="tabs drop-el">
     <div class="tab active" onclick="switchTab('deposits')">DEPOSIT PLAN</div>
     <div class="tab" onclick="switchTab('goals')">GOALS</div>
   </div>
 
   <!-- DEPOSITS TAB -->
-  <div class="tab-panel active" id="tab-deposits">
+  <div class="tab-panel active drop-el" id="tab-deposits">
     <div class="card">
       <div class="card-label">Plan a Deposit</div>
       <div class="form-row-2">
@@ -313,7 +383,7 @@
     <div id="goalCards"><div class="empty-state">No goals yet — add one above</div></div>
   </div>
 
-  <div class="footer">VAULT &nbsp;·&nbsp; PLAN · SAVE · ACHIEVE</div>
+  <div class="footer drop-el">VAULT &nbsp;·&nbsp; PLAN · SAVE · ACHIEVE</div>
 </div>
 
 <script type="module">
@@ -339,7 +409,8 @@ const db    = getFirestore(fbApp);
 const LOADER_DURATION = 6500;
 let loaderDone=false, pendingReveal=null;
 (function(){
-  const rain=document.getElementById('dollarRain'), fill=document.getElementById('loaderFill');
+  // Dollar rain
+  const rain=document.getElementById('dollarRain');
   const chars=['$','$','$','€','£','¥','₿','$'];
   for(let i=0;i<45;i++){
     const el=document.createElement('span'); el.className='dollar-char';
@@ -347,14 +418,59 @@ let loaderDone=false, pendingReveal=null;
     el.style.cssText=`left:${Math.random()*100}vw;animation-duration:${2+Math.random()*4}s;animation-delay:${Math.random()*3}s;font-size:${12+Math.random()*22}px;`;
     rain.appendChild(el);
   }
+
+  // Build tick marks around vault ring
+  const ticksEl=document.getElementById('vaultTicks');
+  for(let i=0;i<36;i++){
+    const t=document.createElement('div');
+    const isMajor=i%9===0;
+    t.className='vault-tick'+(isMajor?' major':' minor');
+    t.style.transform=`rotate(${i*10}deg)`;
+    ticksEl.appendChild(t);
+  }
+
+  // Status messages timed across the 6.5s
+  const fill=document.getElementById('loaderFill');
+  const statusEl=document.getElementById('loaderStatus');
+  const statusMessages=[
+    {at:0,    text:'Cracking the lock...'},
+    {at:2000,  text:'Tumbler 1 aligned...'},
+    {at:3500,  text:'Tumbler 2 aligned...'},
+    {at:5000,  text:'Tumbler 3 aligned...'},
+    {at:5800,  text:'Almost there...'},
+  ];
+  let msgIdx=0;
+
   const t0=performance.now();
   function step(now){
-    const elapsed=now-t0, pct=Math.min(100,(elapsed/LOADER_DURATION)*100);
-    fill.style.width=Math.min(100,pct+Math.sin(elapsed/400)*2)+'%';
-    if(elapsed<LOADER_DURATION){ requestAnimationFrame(step); }
-    else{
-      fill.style.width='100%'; loaderDone=true;
-      setTimeout(()=>{ document.getElementById('loader').classList.add('hidden'); if(pendingReveal){pendingReveal();pendingReveal=null;} },300);
+    const elapsed=now-t0;
+
+    // Update status text
+    while(msgIdx<statusMessages.length && elapsed>=statusMessages[msgIdx].at){
+      statusEl.textContent=statusMessages[msgIdx].text;
+      statusEl.className='loader-status cracking';
+      msgIdx++;
+    }
+
+    // Animate progress bar with slight sine wobble
+    const pct=Math.min(100,(elapsed/LOADER_DURATION)*100);
+    fill.style.width=Math.min(100,pct+Math.sin(elapsed/500)*1.5)+'%';
+
+    if(elapsed<LOADER_DURATION){
+      requestAnimationFrame(step);
+    } else {
+      // UNLOCKED!
+      fill.style.width='100%';
+      fill.classList.add('done');
+      statusEl.textContent='UNLOCKED';
+      statusEl.className='loader-status unlocked';
+      document.getElementById('vaultRing').classList.add('unlocked');
+      document.getElementById('vaultDial').classList.add('unlocked');
+      loaderDone=true;
+      setTimeout(()=>{
+        document.getElementById('loader').classList.add('hidden');
+        if(pendingReveal){pendingReveal();pendingReveal=null;}
+      },700);
     }
   }
   requestAnimationFrame(step);
