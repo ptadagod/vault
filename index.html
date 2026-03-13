@@ -209,8 +209,8 @@
       <div class="auth-tab active" onclick="setAuthTab('login')">LOGIN</div>
       <div class="auth-tab" onclick="setAuthTab('signup')">SIGN UP</div>
     </div>
-    <div class="auth-field"><label>Email</label><input type="email" id="authEmail" placeholder="you@example.com" autocomplete="email" onkeydown="if(event.key==='Enter')doAuth()"></div>
-    <div class="auth-field"><label>Password</label><input type="password" id="authPassword" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doAuth()"></div>
+    <div class="auth-field"><label>Email</label><input type="email" id="authEmail" placeholder="you@example.com" autocomplete="email" onkeydown="if(event.key==='Enter')doAuth()" tabindex="-1"></div>
+    <div class="auth-field"><label>Password</label><input type="password" id="authPassword" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doAuth()" tabindex="-1"></div>
     <button class="btn-auth" id="authBtn" onclick="doAuth()">LOGIN</button>
     <div class="auth-err" id="authErr"></div>
     <div class="auth-loading" id="authLoading">AUTHENTICATING...</div>
@@ -390,6 +390,9 @@ onAuthStateChanged(auth, user=>{
       document.getElementById('app').classList.remove('visible');
       document.getElementById('app').style.display='none';
       document.getElementById('authScreen').style.display='flex';
+      // Re-enable inputs now that user needs to see them
+      document.getElementById('authEmail').removeAttribute('tabindex');
+      document.getElementById('authPassword').removeAttribute('tabindex');
       setTimeout(()=>document.getElementById('authScreen').classList.add('visible'),50);
     });
   }
